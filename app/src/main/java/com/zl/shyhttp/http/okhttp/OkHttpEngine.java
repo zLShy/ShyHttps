@@ -4,12 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.zl.shyhttp.http.EngineCallback;
 import com.zl.shyhttp.http.HttpUtils;
 import com.zl.shyhttp.http.IHttpEngine;
 import com.zl.shyhttp.http.interceptor.CacheRequestInterceptor;
 import com.zl.shyhttp.http.interceptor.CacheResponseInterceptor;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,12 +70,23 @@ public class OkHttpEngine implements IHttpEngine {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(Call call, final Response response) throws IOException {
                 final String resultJson = response.body().string();
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         callback.onSuccess(resultJson);
+                        if (response.code() == 200) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(resultJson);
+                                Log.e("TAG", jsonObject.toString());
+                                callback.onSuccess(jsonObject.getString("data"));
+                            } catch (Exception e) {
+                                callback.onFailure(response.code(), resultJson);
+                            }
+                        } else {
+                            callback.onFailure(response.code(), resultJson);
+                        }
                     }
                 });
 
@@ -110,7 +124,14 @@ public class OkHttpEngine implements IHttpEngine {
                             @Override
                             public void run() {
                                 if (response.code() == 200) {
-                                    callback.onSuccess(result);
+                                    try {
+
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        Log.e("TAG", jsonObject.toString());
+                                        callback.onSuccess(jsonObject.getString("data"));
+                                    } catch (Exception e) {
+                                        callback.onFailure(response.code(), e.getMessage());
+                                    }
                                 } else {
                                     callback.onFailure(response.code(), result);
                                 }
