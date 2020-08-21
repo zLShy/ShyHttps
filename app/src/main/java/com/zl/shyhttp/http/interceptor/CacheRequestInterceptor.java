@@ -42,7 +42,7 @@ public class CacheRequestInterceptor implements Interceptor {
                     .build();
         } else {
             request = request.newBuilder()
-                    .addHeader("Authorization", "Bearer " + preferences.getString("token", null))
+                    .addHeader("TOKEN", preferences.getString("token", null))
                     .build();
         }
 

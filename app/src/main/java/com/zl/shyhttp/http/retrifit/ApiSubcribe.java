@@ -16,7 +16,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 
-public class ApiSubcribe {
+final class ApiSubcribe {
 
     private static ApiSubcribe mInstance;
 
