@@ -45,7 +45,7 @@ public class CacheRequestInterceptor implements Interceptor {
                     .addHeader(preferences.getString("tokenkey", null), preferences.getString("token", null))
                     .build();
         }
-
+        Log.e("TOKEN", preferences.getString("tokenkey", null) + ":" + preferences.getString("token", null));
         return chain.proceed(request);
     }
 }
