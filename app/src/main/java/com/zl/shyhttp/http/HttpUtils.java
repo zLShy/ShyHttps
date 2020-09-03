@@ -113,22 +113,22 @@ public class HttpUtils {
         return stringBuffer.toString();
     }
 
-    public void execute(EngineCallback callBack){
+    public void execute(EngineCallback callBack) {
         // 每次执行都会进入这个方法：这里添加是行不通的
         // 1.baseLibrary里面这里面不包含业务逻辑
         // 2.如果有多条业务线，
         // 让callBack回调去
 
-        if(callBack == null){
+        if (callBack == null) {
             callBack = EngineCallback.DEFUALT_CALL_BACK;
         }
-
+        callBack.onPreExecute(mContext, mParams);
         // 判断执行方法
-        if(mType == POST_TYPE){
-            post(mUrl,mParams,callBack);
+        if (mType == POST_TYPE) {
+            post(mUrl, mParams, callBack);
         }
 
-        if(mType == GET_TYPE){
+        if (mType == GET_TYPE) {
             get(mUrl, mParams, callBack);
         }
     }
